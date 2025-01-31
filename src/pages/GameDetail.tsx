@@ -18,11 +18,11 @@ const GameDetail = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-mlb-navy">
+    <div className="flex h-screen w-full bg-gray-50 dark:bg-mlb-navy overflow-hidden">
       <AppSidebar />
       
-      <main className="flex-1">
-        <div className="p-6 border-b border-gray-200 dark:border-white/10">
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <div className="px-8 py-6 border-b border-gray-200 dark:border-white/10">
           <Button 
             variant="ghost" 
             onClick={() => navigate('/')}
@@ -52,7 +52,7 @@ const GameDetail = () => {
         </div>
 
         {/* Timeline Section */}
-        <div className="p-6">
+        <div className="flex-1 overflow-hidden px-8 py-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-mlb-navy dark:text-white">
               Live Timeline
@@ -63,7 +63,7 @@ const GameDetail = () => {
             </div>
           </div>
           
-          <ScrollArea className="h-[calc(100vh-280px)]">
+          <ScrollArea className="h-[calc(100vh-280px)] w-full pr-4">
             <div className="space-y-6">
               {timelineEvents.map((event, index) => (
                 <div 
