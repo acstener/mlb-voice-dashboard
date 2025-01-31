@@ -15,35 +15,36 @@ const GameDetail = () => {
     { time: "19:40", event: "Ball", player: "Mike Trout", details: "Outside fastball" },
     { time: "19:38", event: "Foul Ball", player: "Mike Trout", details: "95 MPH Fastball" },
     { time: "19:35", event: "Pitching Change", player: "Yankees", details: "G. Cole replaces N. Cortes" },
-    // ... more events would be added here in a real implementation
   ];
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-mlb-navy">
       <AppSidebar />
       
-      <main className="flex-1 p-6">
-        <Button 
-          variant="ghost" 
-          className="mb-6"
-          onClick={() => navigate('/')}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Games
-        </Button>
+      <main className="flex-1">
+        <div className="p-6 border-b border-gray-200 dark:border-white/10">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/')}
+            className="mb-2"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Games
+          </Button>
 
-        {/* Voice Assistant Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 mb-6 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-mlb-navy dark:text-white">
+              <h1 className="text-4xl font-bold text-mlb-navy dark:text-white">
                 {gameId?.replace('-vs-', ' vs ')}
               </h1>
               <p className="text-gray-500 dark:text-gray-400 mt-1">
                 Ask anything about the game
               </p>
             </div>
-            <Button size="lg" className="bg-mlb-red hover:bg-mlb-red/90">
+            <Button 
+              size="lg" 
+              className="bg-mlb-red hover:bg-mlb-red/90 text-white"
+            >
               <Mic className="mr-2 h-5 w-5" />
               Start Speaking
             </Button>
@@ -51,26 +52,26 @@ const GameDetail = () => {
         </div>
 
         {/* Timeline Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div className="p-6">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-mlb-navy dark:text-white">
               Live Timeline
             </h2>
             <div className="flex items-center gap-2">
-              <Circle className="h-3 w-3 text-green-500 animate-pulse" />
+              <Circle className="h-2.5 w-2.5 text-green-500 animate-pulse" />
               <span className="text-sm text-gray-500 dark:text-gray-400">Live</span>
             </div>
           </div>
           
-          <ScrollArea className="h-[600px]">
-            <div className="p-4">
+          <ScrollArea className="h-[calc(100vh-280px)]">
+            <div className="space-y-6">
               {timelineEvents.map((event, index) => (
                 <div 
                   key={index}
-                  className="relative pl-4 pb-8 last:pb-0 border-l border-gray-200 dark:border-gray-700 ml-4"
+                  className="relative pl-6 border-l-2 border-gray-200 dark:border-white/10"
                 >
-                  <div className="absolute left-0 -translate-x-1/2 w-2 h-2 rounded-full bg-mlb-red" />
-                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+                  <div className="absolute left-0 top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-mlb-red ring-4 ring-white dark:ring-mlb-navy" />
+                  <div className="bg-white dark:bg-gray-800/50 rounded-lg p-4 shadow-sm">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-mlb-red">
                         {event.time}
