@@ -1,13 +1,15 @@
 import HeaderCard from "@/components/HeaderCard"
-import { AiTester } from "@/components/AiTester"
+import { AppSidebar } from "@/components/AppSidebar"
 
 const Index = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <HeaderCard />
-      <AiTester />
+    <div className="flex h-screen bg-gray-50 dark:bg-mlb-navy/95">
+      <AppSidebar />
+      <div className="flex-1 container mx-auto px-4 py-8">
+        <HeaderCard />
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default Index

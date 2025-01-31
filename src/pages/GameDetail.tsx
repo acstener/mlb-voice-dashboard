@@ -5,6 +5,7 @@ import { ArrowLeft, Mic } from 'lucide-react';
 import { AppSidebar } from '@/components/AppSidebar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
+import { AiTester } from '@/components/AiTester';
 
 const GameDetail = () => {
   const { gameId } = useParams();
@@ -117,7 +118,7 @@ const GameDetail = () => {
                 Ask anything about the game
               </h1>
               <p className="text-gray-500 dark:text-gray-400 mt-2">
-                Use your voice to get real-time insights and stats
+                Use your voice or type to get real-time insights and stats
               </p>
             </div>
             <Button 
@@ -127,6 +128,10 @@ const GameDetail = () => {
               <Mic className="mr-2 h-5 w-5" />
               Start Speaking
             </Button>
+          </div>
+
+          <div className="mt-6">
+            <AiTester />
           </div>
         </div>
 
