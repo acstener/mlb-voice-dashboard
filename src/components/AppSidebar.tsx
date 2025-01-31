@@ -1,4 +1,4 @@
-import { Baseball, CalendarDays, MessageSquare, Settings } from "lucide-react"
+import { CircleDot, CalendarDays, MessageSquare, Settings } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,7 @@ const items = [
   {
     title: "Games",
     url: "/",
-    icon: Baseball,
+    icon: CircleDot,
   },
   {
     title: "Schedule",
