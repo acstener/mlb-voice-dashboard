@@ -2,6 +2,7 @@ import React from 'react';
 import GameCard from '@/components/GameCard';
 import { AppSidebar } from '@/components/AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import HeaderCard from '@/components/HeaderCard';
 
 const Index = () => {
   // Mock data - in real app this would come from an API
@@ -31,8 +32,9 @@ const Index = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-gray-50 dark:bg-mlb-navy">
         <AppSidebar />
-        <main className="flex-1 p-8">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1">
+          <div className="max-w-[1920px] mx-auto p-8">
+            <HeaderCard />
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-4xl font-bold text-mlb-navy dark:text-white">Today's Games</h1>
             </div>
