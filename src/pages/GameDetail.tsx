@@ -26,73 +26,40 @@ const GameDetail = () => {
     { time: "19:35", event: "Pitching Change", player: "Yankees", details: "G. Cole replaces N. Cortes" },
   ];
 
-  // Parse team names from gameId
-  const [homeTeam, awayTeam] = gameId?.split('-vs-') || ['', ''];
-
-  // MLB team IDs mapping
-  const teamIds: { [key: string]: number } = {
-    "Yankees": 147,
-    "Red Sox": 111,
-    "Dodgers": 119,
-    "Giants": 137,
-    "Cubs": 112,
-    "Cardinals": 138,
-    "Mets": 121,
-    "Braves": 144,
-    "Astros": 117,
-    "Rangers": 140,
-    "Blue Jays": 141,
-    "Orioles": 110,
-    "Phillies": 143,
-    "Nationals": 120,
-    "Marlins": 146,
-    "Padres": 135,
-    "Angels": 108,
-    "Athletics": 133,
-    "Mariners": 136,
-    "Rays": 139,
-    "Tigers": 116,
-    "Twins": 142,
-    "White Sox": 145,
-    "Royals": 118,
-    "Pirates": 134,
-    "Brewers": 158,
-    "Reds": 113,
-    "Rockies": 115,
-    "Diamondbacks": 109,
-    "Guardians": 114,
+  // Team data
+  const homeTeam = {
+    name: "Yankees",
+    score: 5,
+    logo: "https://www.mlbstatic.com/team-logos/147.svg"
   };
 
-  const getTeamLogo = (teamName: string) => {
-    const teamId = teamIds[teamName];
-    if (!teamId) {
-      console.warn(`No team ID found for ${teamName}`);
-      return '/placeholder.svg';
-    }
-    return `https://www.mlbstatic.com/team-logos/${teamId}.svg`;
+  const awayTeam = {
+    name: "Red Sox",
+    score: 3,
+    logo: "https://www.mlbstatic.com/team-logos/111.svg"
   };
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-mlb-navy/95">
       <AppSidebar />
       
-      <main className="flex-1 flex flex-col min-h-0">
+      <main className="flex-1 flex flex-col min-h-0 w-full">
         {/* Game Stats Panel */}
-        <div className="bg-white dark:bg-gray-800/30 border-b border-gray-200 dark:border-white/10">
+        <div className="bg-white dark:bg-gray-800/30 border-b border-gray-200 dark:border-white/10 w-full">
           <div className="px-8 py-6">
             <div className="flex items-center justify-between gap-12">
               {/* Away Team */}
               <div className="flex items-center gap-6">
                 <div className="w-20 h-20 bg-gray-100 dark:bg-mlb-navy/50 rounded-full flex items-center justify-center p-3">
                   <img 
-                    src={getTeamLogo(awayTeam)}
-                    alt={`${awayTeam} logo`}
+                    src={awayTeam.logo}
+                    alt={`${awayTeam.name} logo`}
                     className="w-12 h-12 object-contain"
                   />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-semibold text-gray-600 dark:text-white/80">{awayTeam}</h3>
-                  <p className="text-6xl font-bold text-mlb-red mt-1">3</p>
+                  <h3 className="text-2xl font-semibold text-gray-600 dark:text-white/80">{awayTeam.name}</h3>
+                  <p className="text-6xl font-bold text-mlb-red mt-1">{awayTeam.score}</p>
                 </div>
               </div>
 
@@ -118,13 +85,13 @@ const GameDetail = () => {
               {/* Home Team */}
               <div className="flex items-center gap-6">
                 <div>
-                  <h3 className="text-2xl font-semibold text-gray-600 dark:text-white/80">{homeTeam}</h3>
-                  <p className="text-6xl font-bold text-mlb-red mt-1">5</p>
+                  <h3 className="text-2xl font-semibold text-gray-600 dark:text-white/80">{homeTeam.name}</h3>
+                  <p className="text-6xl font-bold text-mlb-red mt-1">{homeTeam.score}</p>
                 </div>
                 <div className="w-20 h-20 bg-gray-100 dark:bg-mlb-navy/50 rounded-full flex items-center justify-center p-3">
                   <img 
-                    src={getTeamLogo(homeTeam)}
-                    alt={`${homeTeam} logo`}
+                    src={homeTeam.logo}
+                    alt={`${homeTeam.name} logo`}
                     className="w-12 h-12 object-contain"
                   />
                 </div>
