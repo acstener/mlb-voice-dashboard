@@ -1,12 +1,11 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Mic } from 'lucide-react';
 import { AppSidebar } from '@/components/AppSidebar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { AiTester } from '@/components/AiTester';
-import { VoiceInput } from '@/components/VoiceInput';
 
 const GameDetail = () => {
   const { gameId } = useParams();
@@ -113,7 +112,7 @@ const GameDetail = () => {
             Back to Games
           </Button>
 
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
                 Ask anything about the game
@@ -122,18 +121,17 @@ const GameDetail = () => {
                 Use your voice or type to get real-time insights and stats
               </p>
             </div>
+            <Button 
+              size="lg" 
+              className="bg-mlb-red hover:bg-mlb-red/90 text-white"
+            >
+              <Mic className="mr-2 h-5 w-5" />
+              Start Speaking
+            </Button>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Voice Assistant</h2>
-              <VoiceInput />
-            </Card>
-
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Text Assistant</h2>
-              <AiTester />
-            </Card>
+          <div className="mt-6">
+            <AiTester />
           </div>
         </div>
 
