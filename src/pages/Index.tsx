@@ -1,5 +1,7 @@
 import React from 'react';
 import GameCard from '@/components/GameCard';
+import { AppSidebar } from '@/components/AppSidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 const Index = () => {
   // Mock data - in real app this would come from an API
@@ -26,24 +28,31 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-mlb-navy p-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-mlb-navy dark:text-white">MLB Games</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {games.map((game, index) => (
-            <GameCard
-              key={index}
-              homeTeam={game.homeTeam}
-              awayTeam={game.awayTeam}
-              time={game.time}
-              isLive={game.isLive}
-              score={game.score}
-            />
-          ))}
-        </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-gray-50 dark:bg-mlb-navy">
+        <AppSidebar />
+        <main className="flex-1 p-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-4xl font-bold text-mlb-navy dark:text-white">Today's Games</h1>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {games.map((game, index) => (
+                <GameCard
+                  key={index}
+                  homeTeam={game.homeTeam}
+                  awayTeam={game.awayTeam}
+                  time={game.time}
+                  isLive={game.isLive}
+                  score={game.score}
+                />
+              ))}
+            </div>
+          </div>
+        </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
