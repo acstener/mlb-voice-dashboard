@@ -2,17 +2,65 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Loader2, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
 export const VoiceInput = () => {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [response, setResponse] = useState('');
-  const [audioContent, setAudioContent] = useState<string | null>(null);
   const recognition = useRef<SpeechRecognition | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef(new Audio());
   const { toast } = useToast();
+
+  const generateSpeech = async (text: string) => {
+    try {
+      const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${import.meta.env.VITE_GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: { text },
+          voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL', name: 'en-US-Neural2-C' },
+          audioConfig: { 
+            audioEncoding: 'MP3',
+            speakingRate: 1.0,
+            pitch: 0,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
+
+      const { audioContent } = await response.json();
+      return audioContent;
+    } catch (error) {
+      console.error('Error generating speech:', error);
+      throw error;
+    }
+  };
+
+  const playAudio = async (text: string) => {
+    try {
+      setIsPlaying(true);
+      const audioContent = await generateSpeech(text);
+      if (audioRef.current) {
+        audioRef.current.src = `data:audio/mp3;base64,${audioContent}`;
+        audioRef.current.onended = () => setIsPlaying(false);
+        await audioRef.current.play();
+      }
+    } catch (error) {
+      console.error('Error playing audio:', error);
+      setIsPlaying(false);
+      toast({
+        title: "Error",
+        description: "Failed to play audio response",
+        variant: "destructive",
+      });
+    }
+  };
 
   const startListening = () => {
     try {
@@ -43,34 +91,34 @@ export const VoiceInput = () => {
         setIsProcessing(true);
 
         try {
-          const { data, error } = await supabase.functions.invoke('generate-with-gemini', {
-            body: { prompt: transcript },
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{ text: transcript }]
+              }]
+            }),
           });
 
-          if (error) throw error;
-
-          setResponse(data.generatedText);
-          setAudioContent(data.audioContent);
-
-          // Automatically play the response
-          if (data.audioContent) {
-            const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
-            audioRef.current = audio;
-            setIsPlaying(true);
-            
-            audio.onended = () => {
-              setIsPlaying(false);
-            };
-            
-            audio.play();
+          if (!response.ok) {
+            throw new Error('Failed to generate AI response');
           }
+
+          const data = await response.json();
+          const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated';
+          
+          setResponse(generatedText);
+          await playAudio(generatedText);
 
           toast({
             title: "Success",
             description: "Response generated successfully",
           });
         } catch (error) {
-          console.error('Error calling Gemini API:', error);
+          console.error('Error generating response:', error);
           toast({
             title: "Error",
             description: "Failed to generate response",
@@ -109,13 +157,6 @@ export const VoiceInput = () => {
     }
   };
 
-  const playResponse = () => {
-    if (audioContent && audioRef.current) {
-      setIsPlaying(true);
-      audioRef.current.play();
-    }
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex justify-center gap-2">
@@ -143,11 +184,11 @@ export const VoiceInput = () => {
           )}
         </Button>
 
-        {audioContent && (
+        {response && (
           <Button
             size="lg"
             variant="outline"
-            onClick={playResponse}
+            onClick={() => playAudio(response)}
             disabled={isPlaying}
             className="bg-white/10"
           >
