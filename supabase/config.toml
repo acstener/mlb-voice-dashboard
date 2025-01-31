@@ -1,1 +1,3 @@
 project_id = "dejxqycopsauhhhiwmef"
+[functions.generate-with-gemini]
+verify_jwt = false
