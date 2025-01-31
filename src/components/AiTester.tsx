@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { VoiceInput } from "./VoiceInput";
 
 export const AiTester = () => {
   const [prompt, setPrompt] = useState("");
@@ -48,12 +49,20 @@ export const AiTester = () => {
     }
   };
 
+  const handleVoiceInput = (transcript: string) => {
+    setPrompt(transcript);
+    toast({
+      title: "Voice Input Received",
+      description: transcript,
+    });
+  };
+
   return (
     <Card className="p-6 max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">Test Gemini AI</h2>
-          <p className="text-gray-500">Enter a prompt to test the Gemini AI API</p>
+          <p className="text-gray-500">Enter a prompt or use voice input to test the Gemini AI API</p>
         </div>
         
         <div className="flex gap-2">
@@ -62,6 +71,10 @@ export const AiTester = () => {
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Enter your prompt..."
             className="flex-1"
+          />
+          <VoiceInput 
+            onTranscript={handleVoiceInput}
+            isProcessing={isLoading}
           />
           <Button type="submit" disabled={isLoading}>
             {isLoading ? (
