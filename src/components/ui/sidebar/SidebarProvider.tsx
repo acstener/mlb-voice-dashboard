@@ -81,7 +81,7 @@ export const SidebarProvider = React.forwardRef<
       <SidebarContext.Provider value={contextValue}>
         <div
           ref={ref}
-          className="flex min-h-screen w-full bg-background"
+          className="flex h-screen w-full"
           {...props}
         >
           {children}
