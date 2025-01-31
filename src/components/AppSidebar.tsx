@@ -38,15 +38,20 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>MLB Voice Assistant</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-lg font-bold tracking-tight">
+            MLB Voice Assistant
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon className="text-mlb-red" />
-                      <span>{item.title}</span>
+                  <SidebarMenuButton
+                    asChild
+                    className="transition-colors duration-200 hover:bg-mlb-red/10"
+                  >
+                    <a href={item.url} className="flex items-center gap-3">
+                      <item.icon className="h-5 w-5 text-mlb-red" />
+                      <span className="font-medium">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
