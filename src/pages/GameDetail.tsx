@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Mic, Circle } from 'lucide-react';
+import { ArrowLeft, Mic } from 'lucide-react';
 import { AppSidebar } from '@/components/AppSidebar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
@@ -16,7 +16,6 @@ const GameDetail = () => {
     count: { balls: 2, strikes: 1 },
     outs: 1,
     bases: { first: true, second: false, third: true },
-    pitchCount: { current: 72, total: 89 },
   };
 
   // Mock timeline data
@@ -30,7 +29,7 @@ const GameDetail = () => {
   // Parse team names from gameId
   const [homeTeam, awayTeam] = gameId?.split('-vs-') || ['', ''];
 
-  // MLB team IDs mapping (reusing from GameCard component)
+  // MLB team IDs mapping
   const teamIds: { [key: string]: number } = {
     "Yankees": 147,
     "Red Sox": 111,
@@ -74,17 +73,17 @@ const GameDetail = () => {
   };
 
   return (
-    <div className="flex h-screen w-full bg-gray-50 dark:bg-mlb-navy overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-mlb-navy/95">
       <AppSidebar />
       
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col min-h-0">
         {/* Game Stats Panel */}
-        <div className="bg-white dark:bg-gray-800/50 border-b border-gray-200 dark:border-white/10">
-          <div className="max-w-7xl mx-auto px-8 py-4">
-            <div className="flex items-center justify-between">
+        <div className="bg-white dark:bg-gray-800/30 border-b border-gray-200 dark:border-white/10">
+          <div className="px-8 py-6">
+            <div className="flex items-center justify-between gap-12">
               {/* Away Team */}
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-gray-100 dark:bg-mlb-navy/50 rounded-full flex items-center justify-center p-2">
+              <div className="flex items-center gap-6">
+                <div className="w-20 h-20 bg-gray-100 dark:bg-mlb-navy/50 rounded-full flex items-center justify-center p-3">
                   <img 
                     src={getTeamLogo(awayTeam)}
                     alt={`${awayTeam} logo`}
@@ -92,57 +91,43 @@ const GameDetail = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold">{awayTeam}</h3>
-                  <p className="text-4xl font-bold text-mlb-red">3</p>
+                  <h3 className="text-2xl font-semibold text-gray-600 dark:text-white/80">{awayTeam}</h3>
+                  <p className="text-6xl font-bold text-mlb-red mt-1">3</p>
                 </div>
               </div>
 
               {/* Game Info */}
-              <div className="text-center">
-                <div className="text-lg font-semibold text-mlb-gray mb-2">{gameState.inning}</div>
-                <div className="flex items-center gap-6">
-                  <div className="text-sm">
-                    <span className="font-medium">B</span>
-                    <span className="text-mlb-red ml-1">{gameState.count.balls}</span>
+              <div className="text-center flex-1">
+                <div className="text-xl font-medium text-gray-500 dark:text-white/60 mb-4">{gameState.inning}</div>
+                <div className="flex items-center justify-center gap-8">
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm font-medium text-gray-400 dark:text-white/40 mb-1">BALLS</span>
+                    <span className="text-2xl font-bold text-mlb-red">{gameState.count.balls}</span>
                   </div>
-                  <div className="text-sm">
-                    <span className="font-medium">S</span>
-                    <span className="text-mlb-red ml-1">{gameState.count.strikes}</span>
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm font-medium text-gray-400 dark:text-white/40 mb-1">STRIKES</span>
+                    <span className="text-2xl font-bold text-mlb-red">{gameState.count.strikes}</span>
                   </div>
-                  <div className="text-sm">
-                    <span className="font-medium">O</span>
-                    <span className="text-mlb-red ml-1">{gameState.outs}</span>
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm font-medium text-gray-400 dark:text-white/40 mb-1">OUTS</span>
+                    <span className="text-2xl font-bold text-mlb-red">{gameState.outs}</span>
                   </div>
                 </div>
               </div>
 
               {/* Home Team */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-6">
                 <div>
-                  <h3 className="text-2xl font-bold">{homeTeam}</h3>
-                  <p className="text-4xl font-bold text-mlb-red">5</p>
+                  <h3 className="text-2xl font-semibold text-gray-600 dark:text-white/80">{homeTeam}</h3>
+                  <p className="text-6xl font-bold text-mlb-red mt-1">5</p>
                 </div>
-                <div className="w-16 h-16 bg-gray-100 dark:bg-mlb-navy/50 rounded-full flex items-center justify-center p-2">
+                <div className="w-20 h-20 bg-gray-100 dark:bg-mlb-navy/50 rounded-full flex items-center justify-center p-3">
                   <img 
                     src={getTeamLogo(homeTeam)}
                     alt={`${homeTeam} logo`}
                     className="w-12 h-12 object-contain"
                   />
                 </div>
-              </div>
-            </div>
-
-            {/* Base runners visualization */}
-            <div className="flex justify-center mt-4">
-              <div className="relative w-24 h-24">
-                {/* Home plate */}
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-4 border-2 border-gray-400 rotate-45" />
-                {/* First base */}
-                <div className={`absolute top-1/2 right-0 w-4 h-4 -translate-y-1/2 ${gameState.bases.first ? 'bg-mlb-red' : 'border-2 border-gray-400'}`} />
-                {/* Second base */}
-                <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 ${gameState.bases.second ? 'bg-mlb-red' : 'border-2 border-gray-400'}`} />
-                {/* Third base */}
-                <div className={`absolute top-1/2 left-0 w-4 h-4 -translate-y-1/2 ${gameState.bases.third ? 'bg-mlb-red' : 'border-2 border-gray-400'}`} />
               </div>
             </div>
           </div>
@@ -153,7 +138,7 @@ const GameDetail = () => {
           <Button 
             variant="ghost" 
             onClick={() => navigate('/')}
-            className="mb-2"
+            className="mb-4 hover:bg-white/10"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Games
@@ -161,11 +146,11 @@ const GameDetail = () => {
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-mlb-navy dark:text-white">
-                {gameId?.replace('-vs-', ' vs ')}
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
                 Ask anything about the game
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-2">
+                Use your voice to get real-time insights and stats
               </p>
             </div>
             <Button 
@@ -179,27 +164,26 @@ const GameDetail = () => {
         </div>
 
         {/* Timeline Section */}
-        <div className="flex-1 overflow-hidden px-8 py-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-mlb-navy dark:text-white">
+        <div className="flex-1 min-h-0 px-8 py-6">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Live Timeline
             </h2>
             <div className="flex items-center gap-2">
-              <Circle className="h-2.5 w-2.5 text-green-500 animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-sm text-gray-500 dark:text-gray-400">Live</span>
             </div>
           </div>
           
-          <ScrollArea className="h-[calc(100vh-280px)] w-full pr-4">
-            <div className="space-y-6">
+          <ScrollArea className="h-[calc(100vh-400px)]">
+            <div className="space-y-6 pr-4">
               {timelineEvents.map((event, index) => (
                 <div 
                   key={index}
-                  className="relative pl-6 border-l-2 border-gray-200 dark:border-white/10"
+                  className="relative pl-6 before:absolute before:left-0 before:top-[22px] before:-translate-y-1/2 before:w-2 before:h-2 before:bg-mlb-red before:rounded-full"
                 >
-                  <div className="absolute left-0 top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-mlb-red ring-4 ring-white dark:ring-mlb-navy" />
-                  <Card className="bg-white dark:bg-gray-800/50 p-4">
-                    <div className="flex items-center justify-between mb-2">
+                  <Card className="bg-white/50 dark:bg-white/5 border-0 p-4">
+                    <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium text-mlb-red">
                         {event.time}
                       </span>
