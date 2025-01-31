@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { SidebarContext } from "./SidebarBase"
+import { SidebarContext, SidebarState } from "./SidebarBase"
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -63,7 +63,7 @@ export const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener("keydown", handleKeyDown)
     }, [toggleSidebar])
 
-    const state = open ? "expanded" : "collapsed"
+    const state: SidebarState = open ? "expanded" : "collapsed"
     const contextValue = React.useMemo(
       () => ({
         state,

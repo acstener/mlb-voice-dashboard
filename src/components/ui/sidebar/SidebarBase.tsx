@@ -3,8 +3,10 @@ import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 
+export type SidebarState = "expanded" | "collapsed"
+
 export type SidebarContext = {
-  state: "expanded" | "collapsed"
+  state: SidebarState
   open: boolean
   setOpen: (open: boolean) => void
   openMobile: boolean
