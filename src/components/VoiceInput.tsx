@@ -1,14 +1,17 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Mic, MicOff, Loader2 } from 'lucide-react';
+import { Mic, MicOff, Loader2, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 export const VoiceInput = () => {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [response, setResponse] = useState('');
+  const [audioContent, setAudioContent] = useState<string | null>(null);
   const recognition = useRef<SpeechRecognition | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
   const startListening = () => {
@@ -47,6 +50,21 @@ export const VoiceInput = () => {
           if (error) throw error;
 
           setResponse(data.generatedText);
+          setAudioContent(data.audioContent);
+
+          // Automatically play the response
+          if (data.audioContent) {
+            const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+            audioRef.current = audio;
+            setIsPlaying(true);
+            
+            audio.onended = () => {
+              setIsPlaying(false);
+            };
+            
+            audio.play();
+          }
+
           toast({
             title: "Success",
             description: "Response generated successfully",
@@ -91,9 +109,16 @@ export const VoiceInput = () => {
     }
   };
 
+  const playResponse = () => {
+    if (audioContent && audioRef.current) {
+      setIsPlaying(true);
+      audioRef.current.play();
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
         <Button
           size="lg"
           className={`${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-mlb-red hover:bg-mlb-red/90'} text-white`}
@@ -117,6 +142,19 @@ export const VoiceInput = () => {
             </>
           )}
         </Button>
+
+        {audioContent && (
+          <Button
+            size="lg"
+            variant="outline"
+            onClick={playResponse}
+            disabled={isPlaying}
+            className="bg-white/10"
+          >
+            <Volume2 className="mr-2 h-5 w-5" />
+            {isPlaying ? 'Playing...' : 'Play Response'}
+          </Button>
+        )}
       </div>
 
       {response && (

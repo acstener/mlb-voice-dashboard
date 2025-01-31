@@ -2,7 +2,7 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,7 +37,25 @@ serve(async (req) => {
     // Extract the generated text from the response
     const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated';
 
-    return new Response(JSON.stringify({ generatedText }), {
+    // Use Google Text-to-Speech API to convert the response to speech
+    const ttsResponse = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        input: { text: generatedText },
+        voice: { languageCode: 'en-US', name: 'en-US-Standard-A' },
+        audioConfig: { audioEncoding: 'MP3' },
+      }),
+    });
+
+    const ttsData = await ttsResponse.json();
+
+    return new Response(JSON.stringify({ 
+      generatedText,
+      audioContent: ttsData.audioContent 
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
