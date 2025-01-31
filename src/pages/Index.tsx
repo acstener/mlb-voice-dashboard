@@ -34,10 +34,11 @@ const Index = () => {
         <AppSidebar />
         <main className="flex-1">
           <div className="max-w-[1920px] mx-auto p-8">
-            <HeaderCard />
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-4xl font-bold text-mlb-navy dark:text-white">Today's Games</h1>
             </div>
+            
+            <HeaderCard />
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {games.map((game, index) => (
