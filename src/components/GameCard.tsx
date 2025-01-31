@@ -16,9 +16,47 @@ interface GameCardProps {
 const GameCard = ({ homeTeam, awayTeam, time, isLive, score }: GameCardProps) => {
   const navigate = useNavigate();
 
+  // MLB team IDs mapping (this would normally come from an API)
+  const teamIds: { [key: string]: number } = {
+    "Yankees": 147,
+    "Red Sox": 111,
+    "Dodgers": 119,
+    "Giants": 137,
+    "Cubs": 112,
+    "Cardinals": 138,
+    "Mets": 121,
+    "Braves": 144,
+    "Astros": 117,
+    "Rangers": 140,
+    "Blue Jays": 141,
+    "Orioles": 110,
+    "Phillies": 143,
+    "Nationals": 120,
+    "Marlins": 146,
+    "Padres": 135,
+    "Angels": 108,
+    "Athletics": 133,
+    "Mariners": 136,
+    "Rays": 139,
+    "Tigers": 116,
+    "Twins": 142,
+    "White Sox": 145,
+    "Royals": 118,
+    "Pirates": 134,
+    "Brewers": 158,
+    "Reds": 113,
+    "Rockies": 115,
+    "Diamondbacks": 109,
+    "Guardians": 114,
+  };
+
   const getTeamLogo = (teamName: string) => {
-    // This would normally fetch from an API - using placeholder for now
-    return `https://www.mlbstatic.com/team-logos/${teamName.toLowerCase()}.svg`;
+    const teamId = teamIds[teamName];
+    if (!teamId) {
+      console.warn(`No team ID found for ${teamName}`);
+      return '/placeholder.svg';
+    }
+    return `https://www.mlbstatic.com/team-logos/${teamId}.svg`;
   };
 
   return (
