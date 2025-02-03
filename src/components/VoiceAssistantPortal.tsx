@@ -33,7 +33,7 @@ export const VoiceAssistantPortal: React.FC<VoiceAssistantPortalProps> = ({ game
 
   return createPortal(
     <div className="fixed bottom-8 right-8 w-96 z-50">
-      <VoiceAssistant gameState={gameState} onVoiceCommand={onVoiceCommand} />
+      <VoiceAssistant gameContext={gameState} onVoiceCommand={onVoiceCommand} />
     </div>,
     portalContainer
   );

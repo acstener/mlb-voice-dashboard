@@ -49,11 +49,40 @@ async def handle_client(websocket):
                 # Parse the incoming message
                 data = json.loads(message)
                 text_input = data.get("content", "")
+                game_context = data.get("gameContext", {})
                 logger.info(f"Received input: {text_input}")
+                logger.debug(f"Game context: {game_context}")
+                
+                # Create a context-aware prompt
+                current_play = game_context.get('currentPlay', {})
+                plays = game_context.get('plays', [])
+                latest_play = plays[0] if plays else None
+                
+                prompt = f"""You are a knowledgeable baseball expert and commentator. 
+
+                Current game situation:
+                - Home Team: {game_context.get('teams', {}).get('home', {}).get('team', {}).get('name', 'Unknown')}
+                - Away Team: {game_context.get('teams', {}).get('away', {}).get('team', {}).get('name', 'Unknown')}
+                - Home Score: {game_context.get('teams', {}).get('home', {}).get('score', 0)}
+                - Away Score: {game_context.get('teams', {}).get('away', {}).get('score', 0)}
+                - Inning: {current_play.get('inning', 1)} {current_play.get('inningHalf', 'top')}
+                - Outs: {current_play.get('outs', 0)}
+                - Count: {current_play.get('balls', 0)}-{current_play.get('strikes', 0)}
+                
+                Latest Play: {latest_play['description'] if latest_play else 'No plays yet'}
+
+                Recent Play History:
+                {chr(10).join([f"- {play['description']}" for play in plays[:3]]) if plays else "No plays yet"}
+                
+                The fan asks: {text_input}
+                
+                Please provide a clear, engaging explanation that helps a baseball beginner understand what's happening. 
+                Include relevant context about the current game situation and explain any baseball terminology used.
+                """
                 
                 # Send to Gemini
                 logger.debug("Sending to Gemini...")
-                response = session.generate_content(text_input)
+                response = session.generate_content(prompt)
                 logger.debug(f"Received response from Gemini: {response.text}")
                 
                 # Send response back to client

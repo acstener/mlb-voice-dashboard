@@ -113,30 +113,32 @@ const GameDetail = () => {
           </div>
         </div>
 
-        {/* Timeline Section */}
-        <ScrollArea className="flex-1">
-          <div className="px-48 py-8">
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Game Timeline</h3>
-            <div className="space-y-4">
-              {timelineEvents.map((event, index) => (
-                <Card key={index} className="p-4 dark:bg-gray-800/30">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium dark:text-white">{event.event}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{event.player}</p>
-                      {event.details && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{event.details}</p>
-                      )}
+        {/* Game Timeline */}
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full">
+            <div className="px-48 py-8">
+              <Card className="p-6">
+                <h2 className="text-xl font-bold mb-4 dark:text-white">Game Timeline</h2>
+                <div className="space-y-4">
+                  {timelineEvents.map((event, index) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="text-sm text-gray-500 dark:text-gray-400 w-20">{event.time}</div>
+                      <div className="flex-1">
+                        <p className="text-gray-900 dark:text-white">{event.event}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {event.player} • {event.details}
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{event.time}</span>
-                  </div>
-                </Card>
-              ))}
+                  ))}
+                </div>
+              </Card>
             </div>
-          </div>
-        </ScrollArea>
+          </ScrollArea>
+        </div>
 
-        <VoiceAssistantPortal />
+        {/* Voice Assistant */}
+        <VoiceAssistantPortal gameState={gameState} />
       </main>
     </div>
   );

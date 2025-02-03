@@ -14,6 +14,11 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ gameContext }) =
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
 
+  // Debug gameContext changes
+  useEffect(() => {
+    console.log('GameContext updated:', gameContext);
+  }, [gameContext]);
+
   useEffect(() => {
     console.log('Attempting to connect to WebSocket...');
     // Initialize WebSocket connection
@@ -56,13 +61,16 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ gameContext }) =
   const handleSendText = () => {
     if (textInput.trim() && wsRef.current?.readyState === WebSocket.OPEN) {
       console.log('Sending message:', textInput);
+      console.log('Current gameContext:', gameContext);
+      
       // Add user message to chat
       setMessages(prev => [...prev, { type: 'user', content: textInput }]);
       
       try {
-        // Send to server
+        // Send to server with game context
         wsRef.current.send(JSON.stringify({
-          content: textInput
+          content: textInput,
+          gameContext: gameContext || {} // Ensure we always send an object
         }));
         console.log('Message sent successfully');
         
