@@ -76,8 +76,10 @@ async def handle_client(websocket):
                 
                 The fan asks: {text_input}
                 
-                Please provide a clear, engaging explanation that helps a baseball beginner understand what's happening. 
-                Include relevant context about the current game situation and explain any baseball terminology used.
+                If the fan is asking what just happened or about the current game situation, give a brief 1-2 sentence response.
+                If the fan is asking to explain a baseball concept or term, provide a beginner-friendly explanation with examples.
+                For casual conversation, respond naturally.
+                Always use fan-friendly language.
                 """
                 
                 # Send to Gemini

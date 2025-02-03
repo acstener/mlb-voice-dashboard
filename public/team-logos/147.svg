@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Yankees Logo -->
+  <g fill="#003087">
+    <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C75 95 95 75 95 50 C95 25 75 5 50 5 Z M50 90 C28 90 10 72 10 50 C10 28 28 10 50 10 C72 10 90 28 90 50 C90 72 72 90 50 90 Z"/>
+    <path d="M25 35 L35 35 L50 65 L65 35 L75 35 L55 75 L45 75 Z"/>
+    <path d="M40 30 L60 30 L60 40 L40 40 Z"/>
+  </g>
+</svg>
