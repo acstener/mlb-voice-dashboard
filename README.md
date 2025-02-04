@@ -41,7 +41,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-## Environment Setup
+## Environment Setup:
 
 ### Backend Environment Variables
 Create a `.env` file in the `mlb-voice-backend` directory with:
