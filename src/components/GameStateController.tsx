@@ -28,14 +28,14 @@ const initialGameState: GameState = {
       team: {
         id: 147,
         name: 'Yankees',
-        score: 0,
+        score: 1,
         leagueRecord: {
           wins: 70,
           losses: 66,
           pct: '.515'
         }
       },
-      score: 0,
+      score: 1,
       isWinner: false
     }
   },

@@ -15,44 +15,91 @@ const DEMO_PLAYS = [
     inningHalf: 'top',
     description: 'Masataka Yoshida leads off with a single to right field',
     player: 'Masataka Yoshida',
-    type: 'single'
+    type: 'single',
+    outs: 0,
+    runsScored: 0
   },
   {
     inning: 1,
     inningHalf: 'top',
     description: 'Gerrit Cole strikes out Rafael Devers on three pitches',
     player: 'Gerrit Cole',
-    type: 'strikeout'
+    type: 'strikeout',
+    outs: 1,
+    runsScored: 0
   },
   {
     inning: 1,
     inningHalf: 'top',
     description: 'Justin Turner grounds into a 6-4-3 double play',
     player: 'Justin Turner',
-    type: 'double_play'
+    type: 'double_play',
+    outs: 3,
+    runsScored: 0
   },
   {
     inning: 1,
     inningHalf: 'bottom',
     description: 'Aaron Judge crushes a solo home run to Monument Park!',
     player: 'Aaron Judge',
-    type: 'home_run'
+    type: 'home_run',
+    outs: 0,
+    runsScored: 1
   },
   {
     inning: 1,
     inningHalf: 'bottom',
     description: 'Chris Sale gets Giancarlo Stanton looking on a slider away',
     player: 'Chris Sale',
-    type: 'strikeout'
+    type: 'strikeout',
+    outs: 1,
+    runsScored: 0
   },
   {
     inning: 1,
     inningHalf: 'bottom',
     description: 'Anthony Rizzo grounds out to second base',
     player: 'Anthony Rizzo',
-    type: 'groundout'
+    type: 'groundout',
+    outs: 2,
+    runsScored: 0
   }
 ];
+
+// Helper to calculate runs for different play types
+const calculateRunsForPlay = (play: any) => {
+  // Extract run information from play description
+  const description = play.description.toLowerCase();
+  
+  switch (play.type) {
+    case 'home_run':
+      if (description.includes('solo')) return 1;
+      if (description.includes('2-run')) return 2;
+      if (description.includes('3-run')) return 3;
+      if (description.includes('grand slam')) return 4;
+      return 1; // Default to solo if not specified
+      
+    case 'single':
+    case 'double':
+    case 'triple':
+      if (description.includes('rbi')) {
+        // Count RBIs mentioned
+        const rbiMatch = description.match(/\d+(?=-run)/); // matches "2-run" etc
+        return rbiMatch ? parseInt(rbiMatch[0]) : 1;
+      }
+      return 0;
+      
+    case 'groundout':
+    case 'sacrifice_fly':
+      if (description.includes('rbi') || description.includes('scores')) {
+        return 1;
+      }
+      return 0;
+      
+    default:
+      return 0;
+  }
+};
 
 const GameDetail = () => {
   const { gameId } = useParams();
@@ -63,10 +110,37 @@ const GameDetail = () => {
     // Add each play every 30 seconds
     DEMO_PLAYS.forEach((play, index) => {
       setTimeout(() => {
-        updateGameState(prevState => ({
-          ...prevState,
-          plays: [...(prevState.plays || []), play]
-        }));
+        updateGameState(prevState => {
+          let newState = { ...prevState };
+          
+          // Calculate runs for this play
+          const runs = calculateRunsForPlay(play);
+          
+          // Update score if there are runs
+          if (runs > 0) {
+            const team = play.inningHalf === 'top' ? 'away' : 'home';
+            newState.teams[team].score += runs;
+            newState.teams[team].team.score += runs;
+          }
+          
+          // Update current play info
+          newState.currentPlay = {
+            ...newState.currentPlay,
+            inning: play.inning,
+            inningHalf: play.inningHalf,
+            outs: play.type === 'double_play' ? 
+              Math.min((newState.currentPlay?.outs || 0) + 2, 3) :
+              play.type === 'strikeout' || play.type === 'groundout' ?
+              Math.min((newState.currentPlay?.outs || 0) + 1, 3) :
+              newState.currentPlay?.outs || 0
+          };
+          
+          // Add play to history
+          return {
+            ...newState,
+            plays: [...(newState.plays || []), play]
+          };
+        });
       }, index * 30000); // 30 seconds between each play
     });
   }, []);
