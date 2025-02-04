@@ -19,6 +19,15 @@ export interface GameStatus {
     detailedState: string;
 }
 
+export interface Play {
+    type: string;
+    description: string;
+    player: string;
+    inning: number;
+    inningHalf: 'top' | 'bottom';
+    explanation?: string;
+}
+
 export interface GameState {
     gamePk: number;
     gameDate: string;
@@ -44,6 +53,7 @@ export interface GameState {
         strikes: number;
         description?: string;
     };
+    plays?: Play[];
 }
 
 // Demo scenarios based on real MLB data structure

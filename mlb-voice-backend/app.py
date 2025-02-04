@@ -12,7 +12,14 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s',
+    datefmt='%H:%M:%S'
+)
+
+# Disable websockets debug logging
+logging.getLogger('websockets').setLevel(logging.WARNING)
 
 # Initialize Gemini client
 try:
@@ -24,6 +31,49 @@ except Exception as e:
     logger.error(traceback.format_exc())
 
 MODEL_ID = "gemini-pro"
+
+# Initialize chat session
+chat_session = None
+
+async def explain_baseball_play(play_description: str, play_type: str = None) -> str:
+    """Get an AI-powered explanation of a baseball play."""
+    global chat_session
+    
+    try:
+        # Initialize chat session if needed
+        if not chat_session:
+            model = genai.GenerativeModel('gemini-pro')
+            chat_session = model.start_chat(
+                history=[
+                    {
+                        "role": "user",
+                        "parts": ["You are BaseballGPT, a next-gen AI analyst specializing in real-time baseball analysis. Your responses should start with a brief title in italics (e.g. *Strategic Move*) followed by 2-3 insightful sentences. Focus on strategy, player tendencies, and game impact. Use natural, engaging language."]
+                    },
+                    {
+                        "role": "model",
+                        "parts": ["I'll provide expert baseball analysis with strategic insights and game context, starting with an italic title."]
+                    }
+                ]
+            )
+        
+        # Craft a more contextual prompt
+        prompt = f"Analyze this play (start with italic title, then 2-3 sentences): {play_description}"
+        
+        # Get an engaging response with higher creativity
+        response = chat_session.send_message(
+            prompt,
+            generation_config={
+                "temperature": 0.8,  # More creative and varied
+                "max_output_tokens": 75,  # Room for richer analysis
+                "candidate_count": 1,
+                "top_p": 0.9  # More expressive language
+            }
+        )
+        
+        return response.text
+    except Exception as e:
+        logger.error(f"Failed to get AI baseball analysis: {e}")
+        return "AI analysis unavailable at this time."
 
 async def handle_client(websocket):
     """Handle WebSocket connection for text interaction."""
@@ -48,6 +98,18 @@ async def handle_client(websocket):
                 
                 # Parse the incoming message
                 data = json.loads(message)
+                message_type = data.get("type", "")
+                
+                if message_type == "explain_play":
+                    play_description = data.get("content", "")
+                    play_type = data.get("play_type", "")
+                    explanation = await explain_baseball_play(play_description, play_type)
+                    await websocket.send(json.dumps({
+                        "type": "explanation",
+                        "content": explanation
+                    }))
+                    continue
+                
                 text_input = data.get("content", "")
                 game_context = data.get("gameContext", {})
                 logger.info(f"Received input: {text_input}")
