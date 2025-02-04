@@ -12,7 +12,7 @@ const Index = () => {
       awayTeam: "Red Sox",
       time: "Now",
       isLive: true,
-      score: { home: 3, away: 2 }
+      score: { home: 1, away: 0 }
     },
     {
       homeTeam: "Dodgers",

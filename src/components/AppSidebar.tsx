@@ -31,9 +31,9 @@ export function AppSidebar() {
       <div className="flex flex-col h-full p-6">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-            MLB Voice
+            🧠 MLB Brain
           </h2>
-          <p className="text-sm text-white/60">Your baseball companion</p>
+          <p className="text-sm text-white/60">Your smart baseball companion</p>
         </div>
 
         <nav className="mt-10 flex-1">

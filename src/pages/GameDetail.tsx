@@ -1,4 +1,6 @@
 import React from 'react';
+import { BrainInsightButton } from '@/components/BrainInsightButton';
+import { ElevenLabsWidget } from '@/components/ElevenLabsWidget';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Mic } from 'lucide-react';
@@ -156,6 +158,7 @@ const GameDetail = () => {
     <div className="flex flex-1 bg-gray-50 dark:bg-mlb-navy/95">
       <AppSidebar />
       <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        <ElevenLabsWidget />
         {/* Game Stats Panel */}
         <div className="relative overflow-hidden">
           {/* Gemini-inspired gradient background */}
@@ -189,7 +192,11 @@ const GameDetail = () => {
               </div>
 
               {/* Game Info - Baseball Scorecard Style */}
-              <div className="px-8 lg:px-10 py-5 lg:py-6 bg-white/50 dark:bg-white/5 backdrop-blur-sm rounded-xl lg:rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10">
+              <div className="relative px-8 lg:px-10 py-5 lg:py-6 bg-white/50 dark:bg-white/5 backdrop-blur-sm rounded-xl lg:rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/10">
+                {/* Brain Insight Button - Positioned absolutely at the bottom */}
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
+                  <BrainInsightButton />
+                </div>
                 {/* Inning Display with Live Indicator */}
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <div className="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-100 font-mono tracking-tight">

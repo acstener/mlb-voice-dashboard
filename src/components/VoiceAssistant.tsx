@@ -97,12 +97,14 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ gameContext }) =
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 left-6 z-50">
       {/* Chat Window */}
       {isOpen && (
-        <Card className="relative p-4 bg-white/50 dark:bg-gray-800/30 shadow-lg backdrop-blur-sm overflow-hidden mb-4 w-[400px]">
-          {/* Subtle gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-blue-500/5 dark:from-blue-500/10 dark:via-purple-500/10 dark:to-blue-500/10"></div>
+        <Card className="relative p-4 bg-white shadow-lg overflow-hidden mb-4 w-[400px] border-0">
+          {/* Gradient border */}
+          <div className="absolute inset-0 p-[2px] rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600">
+            <div className="absolute inset-0 bg-white rounded-lg"></div>
+          </div>
           
           <div className="relative flex flex-col gap-4">
             {/* Close button */}
@@ -127,8 +129,8 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ gameContext }) =
               )}
               <div
                 className={`relative max-w-[80%] p-3 rounded-2xl ${message.type === 'user'
-                  ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-800 shadow-sm'} 
+                  ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 text-white'
+                  : 'bg-gray-50 border border-gray-100'} 
                   ${message.type === 'assistant' ? 'rounded-bl-sm' : 'rounded-br-sm'}`}
               >
                 <div className="text-sm">{message.content}</div>
@@ -145,7 +147,7 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ gameContext }) =
             onChange={(e) => setTextInput(e.target.value)}
             onKeyPress={handleKeyPress}
             disabled={!isConnected}
-            className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm"
+            className="bg-white border-gray-100"
           />
           <Button
             onClick={handleSendText}
