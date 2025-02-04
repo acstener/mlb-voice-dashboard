@@ -82,7 +82,8 @@ class WebSocketManager {
         return;
       }
 
-      const ws = new WebSocket('ws://localhost:8765');
+      const wsUrl = import.meta.env.VITE_BACKEND_URL?.replace('https://', 'wss://') || 'wss://localhost:8765';
+      const ws = new WebSocket(wsUrl);
       ws.addEventListener('open', () => {
         this.instance = ws;
         resolve(ws);

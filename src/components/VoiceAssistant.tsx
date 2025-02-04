@@ -23,7 +23,8 @@ export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ gameContext }) =
   useEffect(() => {
     console.log('Attempting to connect to WebSocket...');
     // Initialize WebSocket connection
-    wsRef.current = new WebSocket('ws://localhost:8765');
+    const wsUrl = import.meta.env.VITE_BACKEND_URL?.replace('https://', 'wss://') || 'wss://localhost:8765';
+    wsRef.current = new WebSocket(wsUrl);
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connected successfully');
