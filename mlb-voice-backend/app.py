@@ -47,11 +47,11 @@ async def explain_baseball_play(play_description: str, play_type: str = None) ->
                 history=[
                     {
                         "role": "user",
-                        "parts": ["You are BaseballGPT, a next-gen AI analyst specializing in real-time baseball analysis. Your responses should start with a brief title in italics (e.g. *Strategic Move*) followed by 2-3 insightful sentences. Focus on strategy, player tendencies, and game impact. Use natural, engaging language."]
+                        "parts": ["You are a friendly baseball companion helping new fans understand the game. Your responses should be conversational and easy to understand, as if explaining to someone at their first game. Start with a brief title that captures the moment (e.g. *Exciting Double Play!*), then explain what happened and why it matters in simple terms. Avoid technical jargon unless necessary, and when you use baseball terms, briefly explain them naturally within your response."]
                     },
                     {
                         "role": "model",
-                        "parts": ["I'll provide expert baseball analysis with strategic insights and game context, starting with an italic title."]
+                        "parts": ["I'll help fans understand and enjoy baseball by explaining plays in a friendly, accessible way, focusing on what makes each moment exciting or important."]
                     }
                 ]
             )
@@ -120,28 +120,29 @@ async def handle_client(websocket):
                 plays = game_context.get('plays', [])
                 latest_play = plays[0] if plays else None
                 
-                prompt = f"""You are a knowledgeable baseball expert and commentator. 
+                prompt = f"""You are a friendly and knowledgeable baseball companion, helping new fans understand and enjoy the game. Think of yourself as sitting next to them at their first baseball game, ready to explain things in simple terms.
 
-                Current game situation:
-                - Home Team: {game_context.get('teams', {}).get('home', {}).get('team', {}).get('name', 'Unknown')}
-                - Away Team: {game_context.get('teams', {}).get('away', {}).get('team', {}).get('name', 'Unknown')}
-                - Home Score: {game_context.get('teams', {}).get('home', {}).get('score', 0)}
-                - Away Score: {game_context.get('teams', {}).get('away', {}).get('score', 0)}
-                - Inning: {current_play.get('inning', 1)} {current_play.get('inningHalf', 'top')}
-                - Outs: {current_play.get('outs', 0)}
-                - Count: {current_play.get('balls', 0)}-{current_play.get('strikes', 0)}
+                Current Game Context:
+                {game_context.get('teams', {}).get('home', {}).get('team', {}).get('name', 'Unknown')} vs {game_context.get('teams', {}).get('away', {}).get('team', {}).get('name', 'Unknown')}
+                Score: {game_context.get('teams', {}).get('home', {}).get('score', 0)} - {game_context.get('teams', {}).get('away', {}).get('score', 0)}
+                We're in the {current_play.get('inningHalf', 'top')} of inning {current_play.get('inning', 1)}
+                Current situation: {current_play.get('outs', 0)} out(s), count is {current_play.get('balls', 0)}-{current_play.get('strikes', 0)}
                 
-                Latest Play: {latest_play['description'] if latest_play else 'No plays yet'}
+                What just happened: {latest_play['description'] if latest_play else 'The game is just getting started'}
 
-                Recent Play History:
+                Recent key moments:
                 {chr(10).join([f"- {play['description']}" for play in plays[:3]]) if plays else "No plays yet"}
                 
                 The fan asks: {text_input}
                 
-                If the fan is asking what just happened or about the current game situation, give a brief 1-2 sentence response.
-                If the fan is asking to explain a baseball concept or term, provide a beginner-friendly explanation with examples.
-                For casual conversation, respond naturally.
-                Always use fan-friendly language.
+                Guidelines for your response:
+                1. Be extremely concise - use at most 1-2 short sentences
+                2. Focus on what's most important right now
+                3. Only explain baseball terms if specifically asked
+                4. Keep it casual and friendly, but brief
+                5. For greetings or general statements, use just one short sentence
+                
+                Remember: Your goal is to help them enjoy and understand baseball, not overwhelm them with stats or technical details.
                 """
                 
                 # Send to Gemini
